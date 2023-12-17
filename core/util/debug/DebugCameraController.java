@@ -8,16 +8,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public class DebugCameraController {
 
+    // attributes
     private final Vector2 position = new Vector2();
     private final Vector2 startPosition = new Vector2();
     private float zoom = 1f;
-
     private final DebugCameraConfig config;
 
+    // constructor
     public DebugCameraController() {
         config = new DebugCameraConfig();
     }
 
+    // init
     public void setStartPosition(float x, float y) {
         startPosition.set(x, y);
         position.set(x, y);
