@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.estemon.studio.config.GameConfig;
-import net.estemon.studio.util.debug.DebugCameraController;
-import net.estemon.studio.util.GdxUtils.*;
+import net.estemon.studio.utils.debug.DebugCameraController;
+import net.estemon.studio.utils.debug.GdxUtils;
 
 public class GameRenderer implements Disposable {
 
