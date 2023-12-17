@@ -1,4 +1,4 @@
-package net.estemon.studio.utils.debug;
+package net.estemon.studio.util.debug;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
