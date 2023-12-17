@@ -1,12 +1,15 @@
 package net.estemon.studio.screen.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.estemon.studio.config.GameConfig;
+import net.estemon.studio.entity.SnakeHead;
 import net.estemon.studio.utils.ViewportUtils;
 import net.estemon.studio.utils.debug.DebugCameraController;
 import net.estemon.studio.utils.GdxUtils;
@@ -44,15 +47,6 @@ public class GameRenderer implements Disposable {
 
         GdxUtils.clearScreen();
 
-        // test code
-        viewport.apply();
-        renderer.setProjectionMatrix(camera.combined);
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-
-        renderer.circle(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y, 4, 30);
-
-        renderer.end();
-
         renderDebug();
     }
 
@@ -69,5 +63,24 @@ public class GameRenderer implements Disposable {
     // private methods
     private void renderDebug() {
         ViewportUtils.drawGrid(viewport, renderer);
+
+        viewport.apply();
+
+        Color oldColor = new Color(renderer.getColor());
+        renderer.setProjectionMatrix(camera.combined);
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+
+        drawDebug();
+
+        renderer.end();
+        renderer.setColor(oldColor);
+    }
+
+    private void drawDebug() {
+        renderer.setColor(Color.ORANGE);
+
+        SnakeHead head = controller.getHead();
+        Rectangle headBounds = head.getBounds();
+        renderer.rect(headBounds.x, headBounds.y, headBounds.width, headBounds.height);
     }
 }

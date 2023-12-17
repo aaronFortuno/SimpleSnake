@@ -48,6 +48,10 @@ public abstract class EntityBase {
         return height;
     }
 
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
     // private methods
     private void updateBounds() {
         bounds.setPosition(x, y);
