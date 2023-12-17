@@ -9,8 +9,8 @@
   "upKey": "W",
   "downKey": "S",
 
-  "zoomInKey": "F",
-  "zoomOutKey": "R",
+  "zoomInKey": "R",
+  "zoomOutKey": "F",
 
   "resetKey": "Delete"
 }
