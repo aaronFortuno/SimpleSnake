@@ -15,4 +15,9 @@ public class GameConfig {
     public static final float WORLD_CENTER_Y = WORLD_HEIGHT / 2f;
 
     public static final float SNAKE_SIZE = 1f;
+    public static final float MOVE_TIME = 0.1f;
+    public static final float SNAKE_SPEED = 1f;
+
+    public static final float COIN_SIZE = 1f;
+
 }
