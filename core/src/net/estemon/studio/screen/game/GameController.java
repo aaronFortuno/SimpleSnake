@@ -18,6 +18,9 @@ import net.estemon.studio.entity.SnakeHead;
 
 public class GameController {
 
+    // constants
+    private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
+
     // attributes
     private Snake snake;
     private float timer;
@@ -96,7 +99,7 @@ public class GameController {
         for (BodyPart bodyPart : snake.getBodyParts()) {
             Rectangle bodyPartBounds = bodyPart.getBounds();
             if (Intersector.overlaps(bodyPartBounds, headBounds)) {
-
+                LOG.debug("[HIT!]");
             }
         }
     }
