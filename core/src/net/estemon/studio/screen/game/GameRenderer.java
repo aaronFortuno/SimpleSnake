@@ -98,7 +98,9 @@ public class GameRenderer implements Disposable {
         // coins
         renderer.setColor(Color.GRAY);
         Coin coin = controller.getCoin();
-        Rectangle coinBounds = coin.getBounds();
-        renderer.rect(coinBounds.x, coinBounds.y, coinBounds.width, coinBounds.height);
+        if (coin.isAvailable()) {
+            Rectangle coinBounds = coin.getBounds();
+            renderer.rect(coinBounds.x, coinBounds.y, coinBounds.width, coinBounds.height);
+        }
     }
 }

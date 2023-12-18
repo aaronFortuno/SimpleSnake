@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Logger;
 
+import net.estemon.studio.common.GameManager;
 import net.estemon.studio.config.GameConfig;
 import net.estemon.studio.entity.BodyPart;
 import net.estemon.studio.entity.Coin;
@@ -35,19 +36,23 @@ public class GameController {
 
     // public methods
     public void update(float delta) {
-        queryInput();
-        queryDebugInput();
+        if (GameManager.INSTANCE.isPlaying()) {
+            queryInput();
+            queryDebugInput();
 
-        timer += delta;
-        if (timer >= GameConfig.MOVE_TIME) {
-            timer = 0;
-            snake.move();
+            timer += delta;
+            if (timer >= GameConfig.MOVE_TIME) {
+                timer = 0;
+                snake.move();
 
-            checkCollision();
-            checkOutOfBounds();
+                checkCollision();
+                checkOutOfBounds();
+            }
+
+            spawnCoin();
+        } else {
+            checkForRestart();
         }
-
-        spawnCoin();
     }
 
     public Snake getSnake() {
@@ -105,6 +110,7 @@ public class GameController {
                 Rectangle bodyPartBounds = bodyPart.getBounds();
             if (Intersector.overlaps(bodyPartBounds, headBounds)) {
                 LOG.debug("[HIT!]");
+                GameManager.INSTANCE.setGameOver();
             }
         }
     }
@@ -135,5 +141,18 @@ public class GameController {
 
             coin.setPosition(coinX, coinY);
         }
+    }
+
+    private void checkForRestart() {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            restart();
+        }
+    }
+
+    private void restart() {
+        GameManager.INSTANCE.setPlaying();
+        snake.reset();
+        coin.setAvailable(false);
+        timer = 0;
     }
 }
