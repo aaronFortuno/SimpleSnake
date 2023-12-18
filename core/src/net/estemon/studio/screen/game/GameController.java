@@ -97,7 +97,12 @@ public class GameController {
 
         // head <-> body parts collision
         for (BodyPart bodyPart : snake.getBodyParts()) {
-            Rectangle bodyPartBounds = bodyPart.getBounds();
+            if (bodyPart.isJustAdded())
+            {
+                bodyPart.setJustAdded(false);
+                continue;
+            }
+                Rectangle bodyPartBounds = bodyPart.getBounds();
             if (Intersector.overlaps(bodyPartBounds, headBounds)) {
                 LOG.debug("[HIT!]");
             }
