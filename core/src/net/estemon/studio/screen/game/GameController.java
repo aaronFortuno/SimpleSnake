@@ -10,15 +10,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Logger;
 
 import net.estemon.studio.config.GameConfig;
+import net.estemon.studio.entity.BodyPart;
 import net.estemon.studio.entity.Coin;
 import net.estemon.studio.entity.Direction;
 import net.estemon.studio.entity.Snake;
 import net.estemon.studio.entity.SnakeHead;
 
 public class GameController {
-
-    // constants
-    private static final Logger LOG = new Logger(GameController.class.getName());
 
     // attributes
     private Snake snake;
@@ -92,6 +90,14 @@ public class GameController {
         if (coin.isAvailable() && overlaps) {
             snake.insertBodyPart();
             coin.setAvailable(false);
+        }
+
+        // head <-> body parts collision
+        for (BodyPart bodyPart : snake.getBodyParts()) {
+            Rectangle bodyPartBounds = bodyPart.getBounds();
+            if (Intersector.overlaps(bodyPartBounds, headBounds)) {
+
+            }
         }
     }
 

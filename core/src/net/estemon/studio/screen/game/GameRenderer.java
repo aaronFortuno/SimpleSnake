@@ -80,19 +80,22 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawDebug() {
-        renderer.setColor(Color.ORANGE);
-
         Snake snake = controller.getSnake();
 
-        SnakeHead head = snake.getHead();
-        Rectangle headBounds = head.getBounds();
-        renderer.rect(headBounds.x, headBounds.y, headBounds.width, headBounds.height);
-
+        // snake body
+        renderer.setColor(Color.CORAL);
         for (BodyPart bodyPart : snake.getBodyParts()) {
             Rectangle bodyPartBounds = bodyPart.getBounds();
             renderer.rect(bodyPartBounds.x, bodyPartBounds.y, bodyPartBounds.width, bodyPartBounds.height);
         }
 
+        // snake head
+        renderer.setColor(Color.ORANGE);
+        SnakeHead head = snake.getHead();
+        Rectangle headBounds = head.getBounds();
+        renderer.rect(headBounds.x, headBounds.y, headBounds.width, headBounds.height);
+
+        // coins
         renderer.setColor(Color.GRAY);
         Coin coin = controller.getCoin();
         Rectangle coinBounds = coin.getBounds();
