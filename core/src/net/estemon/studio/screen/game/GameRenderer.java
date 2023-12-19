@@ -71,8 +71,8 @@ public class GameRenderer implements Disposable {
 
         GdxUtils.clearScreen();
 
-        renderDebug();
         renderHud();
+        renderDebug();
     }
 
     public void resize(int width, int height) {
@@ -88,6 +88,29 @@ public class GameRenderer implements Disposable {
     }
 
     // private methods
+    private void renderHud() {
+        viewport.apply();
+        batch.setProjectionMatrix(hudViewport.getCamera().combined);
+        batch.begin();
+
+        drawHud();
+
+        batch.end();
+    }
+
+    private void drawHud() {
+        String highScoreString = "HIGH SCORE: " + GameManager.INSTANCE.getDisplayHighScore();
+        layout.setText(font, highScoreString);
+        font.draw(batch, layout, PADDING, hudViewport.getWorldHeight() - PADDING);
+
+        float scoreX = hudViewport.getWorldWidth() - layout.width;
+        float scoreY = hudViewport.getWorldHeight() - PADDING;
+
+        String scoreString = "SCORE: " + GameManager.INSTANCE.getDisplayScore();
+        layout.setText(font, scoreString);
+        font.draw(batch, layout, scoreX, scoreY);
+    }
+
     private void renderDebug() {
         ViewportUtils.drawGrid(viewport, renderer);
 
@@ -126,28 +149,5 @@ public class GameRenderer implements Disposable {
             Rectangle coinBounds = coin.getBounds();
             renderer.rect(coinBounds.x, coinBounds.y, coinBounds.width, coinBounds.height);
         }
-    }
-
-    private void renderHud() {
-        viewport.apply();
-        batch.setProjectionMatrix(hudViewport.getCamera().combined);
-        batch.begin();
-
-        drawHud();
-
-        batch.end();
-    }
-
-    private void drawHud() {
-        String highScoreString = "HIGH SCORE: " + GameManager.INSTANCE.getDisplayHighScore();
-        layout.setText(font, highScoreString);
-        font.draw(batch, layout, PADDING, hudViewport.getWorldHeight() - PADDING);
-
-        float scoreX = hudViewport.getWorldWidth() - layout.width;
-        float scoreY = hudViewport.getWorldHeight() - PADDING;
-
-        String scoreString = "SCORE: " + GameManager.INSTANCE.getDisplayScore();
-        layout.setText(font, scoreString);
-        font.draw(batch, layout, scoreX, scoreY);
     }
 }
