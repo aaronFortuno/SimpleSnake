@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.estemon.studio.screen.game.GameScreen;
+import net.estemon.studio.screen.loading.LoadingScreen;
 
 public class SimpleSnakeGame extends Game {
 
@@ -27,7 +28,7 @@ public class SimpleSnakeGame extends Game {
 
 		batch = new SpriteBatch();
 
-		setScreen(new GameScreen(this));
+		setScreen(new LoadingScreen(this));
 	}
 
 	@Override
