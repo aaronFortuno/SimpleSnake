@@ -1,13 +1,20 @@
 package net.estemon.studio.screen.game;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import net.estemon.studio.assets.AssetDescriptors;
+import net.estemon.studio.common.GameManager;
 import net.estemon.studio.config.GameConfig;
 import net.estemon.studio.entity.BodyPart;
 import net.estemon.studio.entity.Coin;
@@ -19,17 +26,28 @@ import net.estemon.studio.utils.GdxUtils;
 
 public class GameRenderer implements Disposable {
 
+    // constants
+    public static final float PADDING = 20f;
+
     // attributes
+    private final SpriteBatch batch;
+    private final AssetManager assetManager;
     private final GameController controller;
 
     private OrthographicCamera camera;
     private Viewport viewport;
+    private Viewport hudViewport;
     private ShapeRenderer renderer;
+
+    private BitmapFont font;
+    private final GlyphLayout layout = new GlyphLayout();
 
     private DebugCameraController debugCameraController;
 
     // constructors
-    public GameRenderer(GameController controller) {
+    public GameRenderer(SpriteBatch batch, AssetManager assetManager, GameController controller) {
+        this.batch = batch;
+        this.assetManager = assetManager;
         this.controller = controller;
         init();
     }
@@ -37,7 +55,10 @@ public class GameRenderer implements Disposable {
     private void init() {
         camera = new OrthographicCamera();
         viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT, camera);
+        hudViewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
         renderer = new ShapeRenderer();
+
+        font = assetManager.get(AssetDescriptors.UI_FONT);
 
         debugCameraController = new DebugCameraController();
         debugCameraController.setStartPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
@@ -51,11 +72,14 @@ public class GameRenderer implements Disposable {
         GdxUtils.clearScreen();
 
         renderDebug();
+        renderHud();
     }
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        hudViewport.update(width, height, true);
         ViewportUtils.debugPixelPerUnit(viewport);
+        ViewportUtils.debugPixelPerUnit(hudViewport);
     }
 
     @Override
@@ -102,5 +126,28 @@ public class GameRenderer implements Disposable {
             Rectangle coinBounds = coin.getBounds();
             renderer.rect(coinBounds.x, coinBounds.y, coinBounds.width, coinBounds.height);
         }
+    }
+
+    private void renderHud() {
+        viewport.apply();
+        batch.setProjectionMatrix(hudViewport.getCamera().combined);
+        batch.begin();
+
+        drawHud();
+
+        batch.end();
+    }
+
+    private void drawHud() {
+        String highScoreString = "HIGH SCORE: " + GameManager.INSTANCE.getDisplayHighScore();
+        layout.setText(font, highScoreString);
+        font.draw(batch, layout, PADDING, hudViewport.getWorldHeight() - PADDING);
+
+        float scoreX = hudViewport.getWorldWidth() - layout.width;
+        float scoreY = hudViewport.getWorldHeight() - PADDING;
+
+        String scoreString = "SCORE: " + GameManager.INSTANCE.getDisplayScore();
+        layout.setText(font, scoreString);
+        font.draw(batch, layout, scoreX, scoreY);
     }
 }
