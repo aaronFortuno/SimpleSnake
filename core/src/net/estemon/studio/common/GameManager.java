@@ -1,9 +1,16 @@
 package net.estemon.studio.common;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+
+import net.estemon.studio.SimpleSnakeGame;
+
 public class GameManager {
 
     // constants
     public static final GameManager INSTANCE = new GameManager();
+
+    public static final String HIGH_SCORE_KEY = "highScore";
 
     // attributes
     private GameState state = GameState.READY;
@@ -13,8 +20,14 @@ public class GameManager {
     private int highScore;
     private int displayHighScore;
 
+    private Preferences prefs;
+
     // constructors
-    private GameManager() {} // SINGLETON
+    private GameManager() {
+        prefs = Gdx.app.getPreferences(SimpleSnakeGame.class.getSimpleName());
+        highScore = prefs.getInteger(HIGH_SCORE_KEY, 0);
+        displayHighScore = highScore;
+    } // SINGLETON
 
     // public methods
     public boolean isReady() { return state.isReady(); }
@@ -54,5 +67,15 @@ public class GameManager {
         if (displayHighScore < highScore) {
             displayHighScore = Math.min(highScore, displayHighScore + (int) (100 * delta));
         }
+    }
+
+    public void updateHighScore() {
+        if (score < highScore) {
+            return;
+        }
+
+        highScore = score;
+        prefs.putInteger(HIGH_SCORE_KEY, highScore);
+        prefs.flush();
     }
 }
