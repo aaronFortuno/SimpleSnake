@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Logger;
 
+import net.estemon.studio.collision.CollisionListener;
 import net.estemon.studio.common.GameManager;
 import net.estemon.studio.config.GameConfig;
 import net.estemon.studio.entity.BodyPart;
@@ -23,15 +24,19 @@ public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
 
     // attributes
+    private final CollisionListener listener;
     private Snake snake;
     private float timer;
 
     private Coin coin;
 
     // constructors
-    public GameController() {
+    public GameController(CollisionListener listener) {
+        this.listener = listener;
+
         snake = new Snake();
         coin = new Coin();
+        restart();
     }
 
     // public methods
@@ -98,6 +103,7 @@ public class GameController {
         boolean overlaps = Intersector.overlaps(headBounds, coinBounds);
 
         if (coin.isAvailable() && overlaps) {
+            listener.hitCoin();
             snake.insertBodyPart();
             coin.setAvailable(false);
             GameManager.INSTANCE.incrementScore(GameConfig.COIN_SCORE);
@@ -110,8 +116,11 @@ public class GameController {
                 bodyPart.setJustAdded(false);
                 continue;
             }
-                Rectangle bodyPartBounds = bodyPart.getBounds();
+
+            Rectangle bodyPartBounds = bodyPart.getBounds();
+
             if (Intersector.overlaps(bodyPartBounds, headBounds)) {
+                listener.lose();
                 LOG.debug("[HIT!]");
                 GameManager.INSTANCE.updateHighScore();
                 GameManager.INSTANCE.setGameOver();
